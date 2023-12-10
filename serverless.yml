@@ -1,0 +1,27 @@
+service:
+  name: my-express-app
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+
+functions:
+  app:
+    handler: index.handler
+    environment:
+      MONGODB_URI: ${env:MONGODB_URI}
+      PORT: ${env:PORT}
+    events:
+      - http:
+          path: /
+          method: ANY
+          cors: true
+      - http:
+          path: /{proxy+}
+          method: ANY
+          cors: true
+
+plugins:
+  - serverless-http
